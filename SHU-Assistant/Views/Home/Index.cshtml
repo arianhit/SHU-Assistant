@@ -1,0 +1,121 @@
+﻿@*@{
+    ViewData["Title"] = "Home Page";
+}*@
+
+@*<div class="text-center">
+    <form method="post">
+        <div>
+            <label for="question">Enter your question:</label>
+            <input type="text" id="question" name="userQuery">
+        </div>
+        <input type="submit" value="Submit">
+    </form>
+    <div>
+        <h3>Anwser : <br />@ViewBag.Answer</h3>
+
+    </div>
+</div>*@
+<!---------------------   Nav  starts---------------------->
+<nav class="w-full p-2 h-24 flex items-center gap-4">
+    <!-- Logo -->
+    <a href="/" class="w-12 h-12 rounded-full">
+        <img src="/public/logo.svg"
+             loading="lazy"
+             alt="Sherlock"
+             class="w-full h-full" />
+    </a>
+
+    <p class="font-semibold text-3xl leading-tight tracking-wide">
+        AI Skills Build
+    </p>
+</nav>
+<!---------------------   Nav  End ---------------------->
+<!---------------------   Hero  Start ---------------------->
+<section class="h-[25rem] flex flex-col items-center justify-center gap-10">
+    <h1 class="text-4xl font-bold tracking-wide">
+        Need help finding educational resources ?
+    </h1>
+    <h2 class="font-sm text-gray-500 tracking-wide leading-tight">
+        Input your desired educational resource or career aspiration and we'll
+        provide the necessary links
+    </h2>
+
+    <!--   Search input -->
+
+    <form method="post">
+        <label for="question"
+               class="mb-2 text-sm font-medium text-gray-900 sr-only">Search</label>
+        <div class="relative">
+            <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                <svg aria-hidden="true"
+                     class="w-5 h-5 text-gray-500"
+                     fill="none"
+                     stroke="currentColor"
+                     viewBox="0 0 24 24"
+                     xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                </svg>
+            </div>
+            <input type="text"
+                   id="question"
+                   name="userQuery"
+                   class="block w-[40rem] p-4 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500"
+                   placeholder="Ask me a question"
+                   required />
+            <button type="submit" value="Submit"
+                    class="text-white absolute right-2.5 bottom-2.5 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2">
+                Search
+            </button>
+        </div>
+    </form>
+    <h3>@ViewBag.MainTitle </h3>
+    <!--   Search input ends -->
+</section>
+<!---------------------   Hero  Ends ---------------------->
+<!---------------------   Result section dynamic---------------------->
+<section class="h-[15rem] overflow-y-scroll p-4 flex items-center justify-center flex-col gap-5">
+    
+    @if (@ViewBag.TitlesLinks != null)
+    {
+
+        @foreach (var entry in @ViewBag.TitlesLinks)
+        {
+            <a href="@entry.Value"
+       class="inline-flex items-center justify-center p-5 text-base font-medium text-gray-500 rounded-lg bg-gray-50 hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700 dark:hover:text-white">
+                <span class="w-full">@entry.Key</span>
+                <svg aria-hidden="true"
+             class="w-6 h-6 ml-3"
+             fill="currentColor"
+             viewBox="0 0 20 20"
+             xmlns="http://www.w3.org/2000/svg">
+                    <path fill-rule="evenodd"
+                  d="M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-2.293-2.293a1 1 0 010-1.414z"
+                  clip-rule="evenodd"></path>
+                </svg>
+            </a>
+        }
+    }
+    else
+    {
+        //show no results
+    }
+    
+
+</section>
+
+<script>
+    window.watsonAssistantChatOptions = {
+        integrationID: "9e1d9225-e6df-4f38-a99f-351d5418a8bd", // The ID of this integration.
+        region: "eu-gb", // The region your integration is hosted in.
+        serviceInstanceID: "9105472d-0990-4acc-a349-661d4607d608", // The ID of your service instance.
+        onLoad: function (instance) { instance.render(); }
+    };
+    setTimeout(function () {
+        const t = document.createElement('script');
+        t.src = "https://web-chat.global.assistant.watson.appdomain.cloud/versions/" + (window.watsonAssistantChatOptions.clientVersion || 'latest') + "/WatsonAssistantChatEntry.js";
+        document.head.appendChild(t);
+    });
+</script>
