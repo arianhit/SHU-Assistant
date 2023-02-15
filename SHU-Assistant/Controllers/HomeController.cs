@@ -11,6 +11,8 @@ using Environment = System.Environment;
 using static System.Net.Mime.MediaTypeNames;
 using System.Text.RegularExpressions;
 using Newtonsoft.Json;
+using Microsoft.AspNetCore.Http;
+using IBM.Cloud.SDK.Core.Authentication;
 
 namespace SHU_Assistant.Controllers
 {
@@ -18,18 +20,46 @@ namespace SHU_Assistant.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         public AssistantService assistant;
-        public string sessionId;
-        public bool firstTime;
+
         public HomeController(ILogger<HomeController> logger)
         {
-           
+            IamAuthenticator authenticator = new IamAuthenticator(apikey: "0LTlYh3-Kt6uIe1eQ8ytijsuzdnEKq_jUs8pff49fXeM");
+            AssistantService assis = new AssistantService("2023-01-17", authenticator);
+            assis.SetServiceUrl("https://api.eu-gb.assistant.watson.cloud.ibm.com/instances/9105472d-0990-4acc-a349-661d4607d608");
+            assistant = assis;
             _logger = logger;
         }
 
         public IActionResult Index()
         {
-            
-                return View();
+            // Retrieve the session ID from the session cookie
+            string sessionId = HttpContext.Request.Cookies["sessionId"];
+            string link = "";
+
+
+            // Pass the session ID to the view
+            try
+            {
+
+                
+
+               
+                if (string.IsNullOrEmpty(sessionId))
+                {
+                    // Create a new session and store the session ID in the session cookie
+                    var result1 = assistant.CreateSession(assistantId: "74e78bca-b878-4493-92ad-f31e048b92cd");
+                    sessionId = result1.Result.SessionId;
+                    HttpContext.Response.Cookies.Append("sessionId", sessionId);
+                }
+
+                ViewBag.SessionId = sessionId;
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+            return View();
         }
 
         [HttpPost]
@@ -42,46 +72,25 @@ namespace SHU_Assistant.Controllers
             bool yesNo = false;
             bool NewOrNot = false;
             string anwser = "";
-           
-
-            if (!firstTime)
-            {
-                try
-                {
-                    string link = "";
-                    IamAuthenticator authenticator = new IamAuthenticator(apikey: "0LTlYh3-Kt6uIe1eQ8ytijsuzdnEKq_jUs8pff49fXeM");
-
-                    AssistantService assis = new AssistantService("2023-01-17", authenticator);
-                    assis.SetServiceUrl("https://api.eu-gb.assistant.watson.cloud.ibm.com/instances/9105472d-0990-4acc-a349-661d4607d608");
-
-                    var result = assis.CreateSession(
-                        assistantId: "74e78bca-b878-4493-92ad-f31e048b92cd"
-                    );
-
-                    var sesionId = result.Result.SessionId;
-                    assistant = assis;
-                    sessionId = sesionId;
 
 
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine(e);
-                }
-                firstTime = true;
-            }
+
+
+
+
 
             try
             {
+                string sessionId = HttpContext.Request.Cookies["sessionId"];
 
                 var result2 = assistant.Message(
-                    assistantId: "74e78bca-b878-4493-92ad-f31e048b92cd",
-                    sessionId,
-                    input: new MessageInput()
-                    {
-                        Text = userQuery
-                    }
-                );
+        assistantId: "74e78bca-b878-4493-92ad-f31e048b92cd",
+        sessionId: sessionId,
+        input: new MessageInput()
+        {
+            Text = userQuery
+        }
+    );
 
                 Console.WriteLine(result2.Response);
                 Dictionary<string, string> dict = new Dictionary<string, string>();
@@ -155,7 +164,7 @@ namespace SHU_Assistant.Controllers
                         }
                     }
                     //Console.WriteLine(response);
-                    
+
 
                     //Fetches values from JSON Response
 
@@ -166,7 +175,7 @@ namespace SHU_Assistant.Controllers
                         string lablles = response?["output"]?["generic"]?[0]?["suggestions"]?[i]?["label"].ToString();
                         lables.Add(lablles);
                         Console.WriteLine(lablles + "\n");
-                        
+
                     }
 
                     for (int i = 0; i < response?["output"]?["generic"]?.Count(); i++)
@@ -186,7 +195,7 @@ namespace SHU_Assistant.Controllers
                         }
                     }
 
-                    foreach(string label in lables)
+                    foreach (string label in lables)
                     {
                         if (label.ToUpper() == "YES" || label.ToUpper() == "NO")
                         {
@@ -194,7 +203,7 @@ namespace SHU_Assistant.Controllers
                             anwser = "Is there anything else I can help you with?";
 
                         }
-                        if(label.ToLower() == "i'm new to it" || label.ToLower() == "i'm already familiar")
+                        if (label.ToLower() == "i'm new to it" || label.ToLower() == "i'm already familiar")
                         {
                             anwser = "How familiar are you with it?";
                         }
@@ -208,12 +217,12 @@ namespace SHU_Assistant.Controllers
                     ViewBag.TitlesLinks = dict;
                     ViewBag.Labels = lables;
                     ViewBag.Question = anwser;
-                    
+
                 }
             }
 
 
-            
+
 
             catch (ServiceResponseException e)
             {
@@ -228,7 +237,7 @@ namespace SHU_Assistant.Controllers
         }
 
 
-            [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });

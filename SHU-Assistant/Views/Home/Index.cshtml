@@ -84,7 +84,7 @@
 
         @foreach (var entry in @ViewBag.TitlesLinks)
         {
-            <a href="@entry.Value"
+            <a href="@entry.Value" target="_blank"
        class="inline-flex items-center justify-center p-5 text-base font-medium text-gray-500 rounded-lg bg-gray-50 hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700 dark:hover:text-white">
                 <span class="w-full">@entry.Key</span>
                 <svg aria-hidden="true"
@@ -104,7 +104,7 @@
         <h3>@ViewBag.Question</h3>
         @foreach (var label in @ViewBag.Labels)
         {
-            <button type="button"
+            <button id="myButton" type="button"
             class="inline-flex items-center justify-center p-5 text-base font-medium text-gray-500 rounded-lg bg-gray-50 hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700 dark:hover:text-white"
             onclick="fillTextBox('@label')">
                 <span class="w-full">@label</span>
@@ -126,10 +126,6 @@
             </script>
         }
 
-    }
-    else
-    {
-        <h3>Sorry I could not find any source for you! </h3>
     }
 
 
