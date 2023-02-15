@@ -65,7 +65,8 @@
                    class="block w-[40rem] p-4 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500"
                    placeholder="chat With me"
                    required />
-            <button type="submit" value="Submit"
+            <button type="submit"
+                    value="Submit"
                     class="text-white absolute right-2.5 bottom-2.5 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2">
                 >
             </button>
@@ -99,13 +100,13 @@
         }
     }
     @if (@ViewBag.Labels != null)
-      {
+    {
         <h3>@ViewBag.Question</h3>
         @foreach (var label in @ViewBag.Labels)
         {
-            <form method="post">
-                <button type="submit" value="Submit"
-       class="inline-flex items-center justify-center p-5 text-base font-medium text-gray-500 rounded-lg bg-gray-50 hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700 dark:hover:text-white">
+            <button type="button"
+            class="inline-flex items-center justify-center p-5 text-base font-medium text-gray-500 rounded-lg bg-gray-50 hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700 dark:hover:text-white"
+            onclick="fillTextBox('@label')">
                 <span class="w-full">@label</span>
                 <svg aria-hidden="true"
              class="w-6 h-6 ml-3"
@@ -117,7 +118,12 @@
                   clip-rule="evenodd"></path>
                 </svg>
             </button>
-            </form>
+            <script>
+                function fillTextBox(label) {
+                    document.getElementById('question').value = label;
+                    document.querySelector('form').submit();
+                }
+            </script>
         }
 
     }
@@ -125,7 +131,7 @@
     {
         <h3>Sorry I could not find any source for you! </h3>
     }
-    
+
 
 </section>
 

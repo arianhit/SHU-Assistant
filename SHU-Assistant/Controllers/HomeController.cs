@@ -19,30 +19,10 @@ namespace SHU_Assistant.Controllers
         private readonly ILogger<HomeController> _logger;
         public AssistantService assistant;
         public string sessionId;
+        public bool firstTime;
         public HomeController(ILogger<HomeController> logger)
         {
-            try
-            {
-                string link = "";
-                IamAuthenticator authenticator = new IamAuthenticator(apikey: "0LTlYh3-Kt6uIe1eQ8ytijsuzdnEKq_jUs8pff49fXeM");
-
-                AssistantService assis = new AssistantService("2023-01-17", authenticator);
-                assis.SetServiceUrl("https://api.eu-gb.assistant.watson.cloud.ibm.com/instances/9105472d-0990-4acc-a349-661d4607d608");
-
-                var result = assis.CreateSession(
-                    assistantId: "74e78bca-b878-4493-92ad-f31e048b92cd"
-                );
-
-                var sesionId = result.Result.SessionId;
-                assistant = assis;
-                sessionId = sesionId;
-
-
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-            }
+           
             _logger = logger;
         }
 
@@ -62,6 +42,34 @@ namespace SHU_Assistant.Controllers
             bool yesNo = false;
             bool NewOrNot = false;
             string anwser = "";
+           
+
+            if (!firstTime)
+            {
+                try
+                {
+                    string link = "";
+                    IamAuthenticator authenticator = new IamAuthenticator(apikey: "0LTlYh3-Kt6uIe1eQ8ytijsuzdnEKq_jUs8pff49fXeM");
+
+                    AssistantService assis = new AssistantService("2023-01-17", authenticator);
+                    assis.SetServiceUrl("https://api.eu-gb.assistant.watson.cloud.ibm.com/instances/9105472d-0990-4acc-a349-661d4607d608");
+
+                    var result = assis.CreateSession(
+                        assistantId: "74e78bca-b878-4493-92ad-f31e048b92cd"
+                    );
+
+                    var sesionId = result.Result.SessionId;
+                    assistant = assis;
+                    sessionId = sesionId;
+
+
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                }
+                firstTime = true;
+            }
 
             try
             {
