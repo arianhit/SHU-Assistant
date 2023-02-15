@@ -1,49 +1,80 @@
-﻿@*@{
-    ViewData["Title"] = "Home Page";
-}*@
+﻿<!---------------------   Nav  starts---------------------->
 
-@*<div class="text-center">
-    <form method="post">
-        <div>
-            <label for="question">Enter your question:</label>
-            <input type="text" id="question" name="userQuery">
-        </div>
-        <input type="submit" value="Submit">
-    </form>
-    <div>
-        <h3>Anwser : <br />@ViewBag.Answer</h3>
-
-    </div>
-</div>*@
-<!---------------------   Nav  starts---------------------->
-<nav class="w-full p-2 h-24 flex items-center gap-4">
-    <!-- Logo -->
-    <a href="/" class="w-12 h-12 rounded-full">
-        <img src="/public/logo.svg"
-             loading="lazy"
-             alt="Sherlock"
-             class="w-full h-full" />
-    </a>
-
-    <p class="font-semibold text-3xl leading-tight tracking-wide">
-        AI Skills Build
-    </p>
-</nav>
-<!---------------------   Nav  End ---------------------->
-<!---------------------   Hero  Start ---------------------->
-<section class="h-[25rem] flex flex-col items-center justify-center gap-10">
-    <h1 class="text-4xl font-bold tracking-wide">
-        Need help finding educational resources ?
+<div class="h-[35rem] border-b-2 border-gray-500 p-6 overflow-y-scroll flex flex-col gap-6">
+    <!-- Dynamic MainTitle and MainTextTitle -->
+    @if (@ViewBag.MainTitle == null && @ViewBag.MainTextTitle == null && @ViewBag.Question == null){
+        <h1 class="text-center font-bold text-xl text-white">
+            Hi!,Type something in the search bar so I can help you!
+        </h1>
+    }
+    <h1 class="text-center font-bold text-xl text-white">
+        @ViewBag.MainTitle
     </h1>
-    <h2 class="font-sm text-gray-500 tracking-wide leading-tight">
-        Input your desired educational resource or career aspiration and we'll
-        provide the necessary links
-    </h2>
+    <h1 class="text-center font-bold text-xl text-white">
+        @ViewBag.MainTextTitle
+    </h1>
+    <h1 class="text-center font-bold text-xl text-white">
+        @ViewBag.Question
+    </h1>
+    
 
+    @if (@ViewBag.TitlesLinks != null)
+    {
+
+        @foreach (var entry in @ViewBag.TitlesLinks)
+        {
+            <a href="@entry.Value" target="_blank"
+       class="inline-flex items-center justify-center p-5 text-base font-medium text-gray-500 rounded-lg bg-gray-50 hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700 dark:hover:text-white">
+                <span class="w-full">@entry.Key</span>
+                <svg aria-hidden="true"
+             class="w-6 h-6 ml-3"
+             fill="currentColor"
+             viewBox="0 0 20 20"
+             xmlns="http://www.w3.org/2000/svg">
+                    <path fill-rule="evenodd"
+                  d="M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-2.293-2.293a1 1 0 010-1.414z"
+                  clip-rule="evenodd"></path>
+                </svg>
+            </a>
+        }
+    }
+    @if (@ViewBag.Labels != null)
+    {
+        @foreach (var label in @ViewBag.Labels)
+        {
+            <button id="myButton" type="button"
+            class="inline-flex items-center justify-center p-5 text-base font-medium text-gray-500 rounded-lg bg-gray-50 hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700 dark:hover:text-white"
+            onclick="fillTextBox('@label')">
+                <span class="w-full">@label</span>
+                <svg aria-hidden="true"
+             class="w-6 h-6 ml-3"
+             fill="currentColor"
+             viewBox="0 0 20 20"
+             xmlns="http://www.w3.org/2000/svg">
+                    <path fill-rule="evenodd"
+                  d="M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-2.293-2.293a1 1 0 010-1.414z"
+                  clip-rule="evenodd"></path>
+                </svg>
+            </button>
+            <script>
+                function fillTextBox(label) {
+                    document.getElementById('question').value = label;
+                    document.querySelector('form').submit();
+                }
+            </script>
+        }
+
+    }
+    <!-- Do a foreach here and take them to the other page -->
+    <!-- Dynamic link block segement -->
+    
+    <!-- Dynamic link block segement ends-->
+</div>
     <!--   Search input -->
-
-    <form method="post">
-        <label for="question"
+<div class="h-[10rem] flex items-center justify-center">
+    <!-- Search input field -->
+    <form class="w-[40rem]" method="post">
+        <label for="default-search"
                class="mb-2 text-sm font-medium text-gray-900 sr-only">Search</label>
         <div class="relative">
             <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
@@ -72,65 +103,8 @@
             </button>
         </div>
     </form>
-    <h3>@ViewBag.MainTitle </h3>
-    <h3>@ViewBag.MainTextTitle </h3>
-    <!--   Search input ends -->
-</section>
-<!---------------------   Hero  Ends ---------------------->
-<!---------------------   Result section dynamic---------------------->
-<section class="h-[15rem] overflow-y-scroll p-4 flex items-center justify-center flex-col gap-5">
-    @if (@ViewBag.TitlesLinks != null)
-    {
-
-        @foreach (var entry in @ViewBag.TitlesLinks)
-        {
-            <a href="@entry.Value" target="_blank"
-       class="inline-flex items-center justify-center p-5 text-base font-medium text-gray-500 rounded-lg bg-gray-50 hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700 dark:hover:text-white">
-                <span class="w-full">@entry.Key</span>
-                <svg aria-hidden="true"
-             class="w-6 h-6 ml-3"
-             fill="currentColor"
-             viewBox="0 0 20 20"
-             xmlns="http://www.w3.org/2000/svg">
-                    <path fill-rule="evenodd"
-                  d="M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-2.293-2.293a1 1 0 010-1.414z"
-                  clip-rule="evenodd"></path>
-                </svg>
-            </a>
-        }
-    }
-    @if (@ViewBag.Labels != null)
-    {
-        <h3>@ViewBag.Question</h3>
-        @foreach (var label in @ViewBag.Labels)
-        {
-            <button id="myButton" type="button"
-            class="inline-flex items-center justify-center p-5 text-base font-medium text-gray-500 rounded-lg bg-gray-50 hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700 dark:hover:text-white"
-            onclick="fillTextBox('@label')">
-                <span class="w-full">@label</span>
-                <svg aria-hidden="true"
-             class="w-6 h-6 ml-3"
-             fill="currentColor"
-             viewBox="0 0 20 20"
-             xmlns="http://www.w3.org/2000/svg">
-                    <path fill-rule="evenodd"
-                  d="M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-2.293-2.293a1 1 0 010-1.414z"
-                  clip-rule="evenodd"></path>
-                </svg>
-            </button>
-            <script>
-                function fillTextBox(label) {
-                    document.getElementById('question').value = label;
-                    document.querySelector('form').submit();
-                }
-            </script>
-        }
-
-    }
-
-
-</section>
-
+    <!-- Search input field ends-->
+</div>
 <script>
     window.watsonAssistantChatOptions = {
         integrationID: "9e1d9225-e6df-4f38-a99f-351d5418a8bd", // The ID of this integration.

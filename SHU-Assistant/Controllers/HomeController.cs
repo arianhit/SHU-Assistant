@@ -93,6 +93,7 @@ namespace SHU_Assistant.Controllers
         input: new MessageInput()
         {
             Text = userQuery
+
         }
     );
 
