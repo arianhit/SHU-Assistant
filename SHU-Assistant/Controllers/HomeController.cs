@@ -31,6 +31,13 @@ namespace SHU_Assistant.Controllers
         [HttpPost]
         public ActionResult Index(string userQuery)
         {
+            string titleOfText = "";
+            string mainTitle = "";
+            JArray optionsArray = null;
+            List<string> lables = new List<string>();
+            bool yesNo = false;
+            bool NewOrNot = false;
+
             try
             {
                 string link = "";
@@ -55,65 +62,143 @@ namespace SHU_Assistant.Controllers
                         Text = userQuery
                     }
                 );
+
                 Console.WriteLine(result2.Response);
                 Dictionary<string, string> dict = new Dictionary<string, string>();
+                JObject response = JObject.Parse(result2.Response);
 
-                dynamic jsonResponse = JsonConvert.DeserializeObject(result2.Response);
-                ViewBag.MainTitle = jsonResponse.output.generic[0].text;
+                if (response != null)
+                {
+
+                    //Fetch values from response
+                    try
+                    {
+                        titleOfText = response?["output"]?["generic"]?[0]?["text"]?.ToString();
+
+
+                        mainTitle = response?["output"]?["generic"]?[0]?["title"]?.ToString();
+                    }
+                    //If a value is out of range or not found, the override statement is called
+                    catch (Exception e)
+                    {
+                        Console.WriteLine(e);
+                    }
+                    if (titleOfText != null && titleOfText.Substring(0, 1) == "[")
+
+                    {
+                        int index = titleOfText.IndexOf(':');
+
+                        titleOfText = index >= 0 ? titleOfText.Substring(0, index) : titleOfText;
+                    }
+
+                    try
+                    {
+                        titleOfText = response?["output"]?["generic"]?[0]?["text"]?.ToString();
+
+
+                        mainTitle = response?["output"]?["generic"]?[0]?["title"]?.ToString();
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine(e);
+                    }
+                    if (mainTitle != null && mainTitle.Contains("<br />"))
+                    {
+                        mainTitle = mainTitle.Replace("<br />", "");
+
+                    }
+                    if (titleOfText != null && titleOfText.Contains("<br />"))
+                    {
+
+                        titleOfText = titleOfText.Replace("<br />", "");
+                    }
+                    void linkSeprater(JObject response)
+                    {
+                        for (int i = 0; i < response["output"]["generic"].Count(); i++)
+                        {
+                            string inputText = response?["output"]?["generic"]?[i]?["text"]?.ToString();
+                            string linkPattern = @"\[(.*?)\]\((.*?)\)";
+                            Regex regex = new Regex(linkPattern);
+                            if (inputText != null)
+                            {
+                                MatchCollection matches = regex.Matches(inputText);
+                                foreach (Match match in matches)
+                                {
+                                    string link = Regex.Match(match.Value, linkPattern).Groups[2].Value;
+                                    string title = match.Groups[1].Value;
+
+                                    dict.Add(title, link);
+                                    Console.WriteLine(title + "\n");
+                                    Console.WriteLine(link + "\n");
+                                }
+                            }
+                        }
+                    }
+                    //Console.WriteLine(response);
+                    
+
+                    //Fetches values from JSON Response
+
+
+                    for (int i = 0; i < response?["output"]?["generic"]?[0]?["suggestions"]?.Count(); i++)
+                    {
+
+                        string lablles = response?["output"]?["generic"]?[0]?["suggestions"]?[i]?["label"].ToString();
+                        lables.Add(lablles);
+                        Console.WriteLine(lablles + "\n");
+                    }
+
+                    for (int i = 0; i < response?["output"]?["generic"]?.Count(); i++)
+                    {
+                        optionsArray = response?["output"]?["generic"]?[i]?["options"] as JArray;
+                        if (optionsArray != null)
+                        {
+                            JArray textsArray = response?["output"]?["generic"]?[i]?["text"] as JArray;
+                            foreach (JToken option in optionsArray)
+                            {
+                                string extractedText = (string)option["label"];
+                                lables.Add(extractedText);
+                                // Output: "I have no knowledge" and "I have some knowledge"
+                                Console.WriteLine(extractedText + "\n");
+                            }
+
+                        }
+                    }
+                    ViewBag.MainTitle = mainTitle;
+                    ViewBag.MainTextTitle = titleOfText;
+                    Console.WriteLine(mainTitle);
+                    Console.WriteLine(titleOfText);
+
+                    linkSeprater(response);
+                    ViewBag.TitlesLinks = dict;
+                    ViewBag.Labels = lables;
+                    ViewBag.YesNo = yesNo;
+                    ViewBag.NewOrNot = NewOrNot;
+                }
+            }
 
 
             
-                JObject output = JObject.Parse(result2.Response);
-                string answer = (string)output["output"]["generic"][1]["text"];
-                ViewBag.MainTitle = (string)output["output"]["generic"][0]["text"];
-                if (answer != null)
-                {
 
-
-                    MatchCollection  links = Regex.Matches(answer, @"\[(.*?)\]\(.*?\)");
-                    MatchCollection  titles = Regex.Matches(answer, @"(.*?)\s+\(\d");
-                    
-                    
-                    if (links.Count == titles.Count)
-                    {
-                        for (int i = 0; i < links.Count; i++)
-                        {
-                            dict.Add(titles[i].Groups[1].Value, links[i].Groups[1].Value);
-                        }
-                    }
-                    else
-                    {
-                        
-                    }
-
-                }
-                else
-                {
-                    ViewBag.MainTitle = "Sorry I could not undrestand what you said please tell me clearly";
-                }
-                
-                ViewBag.TitlesLinks = dict;
-                
-
-
-            }
             catch (ServiceResponseException e)
             {
                 Console.WriteLine("Error: " + e.Message);
-                
+
             }
             catch (Exception e)
             {
                 Console.WriteLine("Error: " + e.Message);
             }
-
             return View();
         }
+
+
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
+
 
     }
 }
