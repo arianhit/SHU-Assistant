@@ -20,6 +20,7 @@ namespace SHU_Assistant.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         public AssistantService assistant;
+        public string sessionId;
 
         public HomeController(ILogger<HomeController> logger)
         {
@@ -32,27 +33,30 @@ namespace SHU_Assistant.Controllers
 
         public IActionResult Index()
         {
-            // Retrieve the session ID from the session cookie
-            string sessionId = HttpContext.Request.Cookies["sessionId"];
+
             string link = "";
 
+            Console.WriteLine(sessionId);
 
             // Pass the session ID to the view
             try
             {
 
-                
 
-               
-                if (string.IsNullOrEmpty(sessionId))
-                {
-                    // Create a new session and store the session ID in the session cookie
-                    var result1 = assistant.CreateSession(assistantId: "74e78bca-b878-4493-92ad-f31e048b92cd");
-                    sessionId = result1.Result.SessionId;
-                    HttpContext.Response.Cookies.Append("sessionId", sessionId);
-                }
 
-                ViewBag.SessionId = sessionId;
+
+
+                // Remove the session ID from the cookie
+                HttpContext.Response.Cookies.Delete("sessionId");
+
+                // Create a new session and store the session ID in the session cookie
+                var result1 = assistant.CreateSession(assistantId: "74e78bca-b878-4493-92ad-f31e048b92cd");
+                sessionId = result1.Result.SessionId;
+                Console.WriteLine(sessionId);
+                HttpContext.Response.Cookies.Append("sessionId", sessionId);
+
+
+
 
             }
             catch (Exception e)
