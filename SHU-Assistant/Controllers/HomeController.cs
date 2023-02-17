@@ -13,7 +13,12 @@ using System.Text.RegularExpressions;
 using Newtonsoft.Json;
 using Microsoft.AspNetCore.Http;
 using IBM.Cloud.SDK.Core.Authentication;
-
+//challanges 
+//Every time user chat with bot new session will creat
+//The options that bot give needed to be button on the page so user should be able to click on it and send the label of the button to bot 
+//when user click on the option buttons the textbox will automaticlly fill with the label of the button which user clicked and then submit it by it selfS
+//open graph tags 
+//og stuff 
 namespace SHU_Assistant.Controllers
 {
     public class HomeController : Controller
@@ -76,6 +81,7 @@ namespace SHU_Assistant.Controllers
             bool yesNo = false;
             bool NewOrNot = false;
             string anwser = "";
+            string question = "";
 
 
 
@@ -117,7 +123,7 @@ namespace SHU_Assistant.Controllers
                     {
                         Console.WriteLine(e);
                     }
-                    if (titleOfText != null && titleOfText.Substring(0, 1) == "[")
+                    if (titleOfText != null && titleOfText.Contains(":"))
 
                     {
                         int index = titleOfText.IndexOf(':');
@@ -127,10 +133,26 @@ namespace SHU_Assistant.Controllers
 
                     try
                     {
-                        titleOfText = response?["output"]?["generic"]?[0]?["text"]?.ToString();
+                        
+                        for (int i = 0; i < response["output"]["generic"].Count(); i++)
+                        {
+                            question = response?["output"]?["generic"]?[i]?["text"]?.ToString();
+                            if (question != null && question.Contains("?"))
+                            {
+                                ViewBag.Question = question;
+                            }
+                            if (question != null && question.Contains(","))
+                            {
+                                ViewBag.Question = question;
+                            }
+                            if(question != null && !question.Contains("http"))
+                            {
+                                ViewBag.Question = question;
+                            }
+                        }
 
 
-                        mainTitle = response?["output"]?["generic"]?[0]?["title"]?.ToString();
+                            mainTitle = response?["output"]?["generic"]?[0]?["title"]?.ToString();
                     }
                     catch (Exception e)
                     {
@@ -200,19 +222,7 @@ namespace SHU_Assistant.Controllers
                         }
                     }
 
-                    foreach (string label in lables)
-                    {
-                        if (label.ToUpper() == "YES" || label.ToUpper() == "NO")
-                        {
-
-                            anwser = "Is there anything else I can help you with?";
-
-                        }
-                        if (label.ToLower() == "i'm new to it" || label.ToLower() == "i'm already familiar")
-                        {
-                            anwser = "How familiar are you with it?";
-                        }
-                    }
+                  
                     ViewBag.MainTitle = mainTitle;
                     ViewBag.MainTextTitle = titleOfText;
                     Console.WriteLine(mainTitle);
@@ -221,8 +231,8 @@ namespace SHU_Assistant.Controllers
                     linkSeprater(response);
                     ViewBag.TitlesLinks = dict;
                     ViewBag.Labels = lables;
-                    ViewBag.Question = anwser;
-
+                    ViewBag.Anwser = anwser;
+                    
                 }
             }
 
