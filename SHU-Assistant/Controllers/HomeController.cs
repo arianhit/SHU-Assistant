@@ -13,6 +13,7 @@ using System.Text.RegularExpressions;
 using Newtonsoft.Json;
 using Microsoft.AspNetCore.Http;
 using IBM.Cloud.SDK.Core.Authentication;
+using System.Reflection;
 //challanges 
 //Every time user chat with bot new session will creat
 //The options that bot give needed to be button on the page so user should be able to click on it and send the label of the button to bot 
@@ -93,14 +94,14 @@ namespace SHU_Assistant.Controllers
             {
                 string sessionId = HttpContext.Request.Cookies["sessionId"];
 
-                var result2 = assistant.Message(
-        assistantId: "74e78bca-b878-4493-92ad-f31e048b92cd",
-        sessionId: sessionId,
-        input: new MessageInput()
-        {
-            Text = userQuery
+                        var result2 = assistant.Message(
+                assistantId: "74e78bca-b878-4493-92ad-f31e048b92cd",
+                sessionId: sessionId,
+                input: new MessageInput()
+                {
+                    Text = userQuery
 
-        }
+                }
     );
 
                 Console.WriteLine(result2.Response);
@@ -123,12 +124,19 @@ namespace SHU_Assistant.Controllers
                     {
                         Console.WriteLine(e);
                     }
-                    if (titleOfText != null && titleOfText.Contains(":"))
+                    if (titleOfText != null && titleOfText.Substring(0, 1) == "[")
 
                     {
                         int index = titleOfText.IndexOf(':');
 
                         titleOfText = index >= 0 ? titleOfText.Substring(0, index) : titleOfText;
+                    }
+                    if (mainTitle != null && mainTitle.Substring(0, 1) == "[")
+
+                    {
+                        int index = mainTitle.IndexOf(':');
+
+                        mainTitle = index >= 0 ? mainTitle.Substring(0, index) : mainTitle;
                     }
 
                     try
@@ -137,19 +145,24 @@ namespace SHU_Assistant.Controllers
                         for (int i = 0; i < response["output"]["generic"].Count(); i++)
                         {
                             question = response?["output"]?["generic"]?[i]?["text"]?.ToString();
+                            if (question != null && question.Contains(","))
+                            {
+                               
+                                if (question != null && question.Substring(0, 1) == "[")
+
+                                {
+                                    int index = question.IndexOf(':');
+
+                                    question = index >= 0 ? question.Substring(0, index) : question;
+                                }
+                                ViewBag.Question = question;
+                            }
                             if (question != null && question.Contains("?"))
                             {
                                 ViewBag.Question = question;
                             }
-                            if (question != null && question.Contains(","))
-                            {
-                                ViewBag.Question = question;
+
                             }
-                            if(question != null && !question.Contains("http"))
-                            {
-                                ViewBag.Question = question;
-                            }
-                        }
 
 
                             mainTitle = response?["output"]?["generic"]?[0]?["title"]?.ToString();
@@ -210,7 +223,6 @@ namespace SHU_Assistant.Controllers
                         optionsArray = response?["output"]?["generic"]?[i]?["options"] as JArray;
                         if (optionsArray != null)
                         {
-                            JArray textsArray = response?["output"]?["generic"]?[i]?["text"] as JArray;
                             foreach (JToken option in optionsArray)
                             {
                                 string extractedText = (string)option["label"];

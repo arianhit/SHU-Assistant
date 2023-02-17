@@ -10,12 +10,14 @@
     <h1 class="text-center font-bold text-xl text-white">
         @ViewBag.MainTitle
     </h1>
-    @if (@ViewBag.MainTextTitle != "You can sign-in to your IBM account by clicking [here](https://login.ibm.com/)"){
+    @if (@ViewBag.MainTextTitle != "You can sign-in to your IBM account by clicking : [here](https://login.ibm.com/)")
+    {
         <h1 class="text-center font-bold text-xl text-white">
             @ViewBag.MainTextTitle
         </h1>
     }
-    @if (@ViewBag.MainTextTitle == "You can sign-in to your IBM account by clicking [here](https://login.ibm.com/)"){
+    @if (@ViewBag.MainTextTitle == "You can sign-in to your IBM account by clicking : [here](https://login.ibm.com/)")
+    {
         <h1 class="text-center font-bold text-xl text-white">You can sign-in to your IBM account by clicking</h1>
         <a href="https://login.ibm.com/" target="_blank"
        class="inline-flex items-center justify-center p-5 text-base font-medium text-gray-500 rounded-lg bg-gray-50 hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700 dark:hover:text-white">
