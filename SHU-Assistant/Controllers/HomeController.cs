@@ -27,6 +27,10 @@ namespace SHU_Assistant.Controllers
         private readonly ILogger<HomeController> _logger;
         public AssistantService assistant;
         public string sessionId;
+        public int topicIntendAi = 0;
+        public int topicIntendCloud = 0;
+        public int topicIntendCyberSec = 0;
+        public int topicIntendDesingThink = 0;
 
         public HomeController(ILogger<HomeController> logger)
         {
@@ -94,19 +98,20 @@ namespace SHU_Assistant.Controllers
             {
                 string sessionId = HttpContext.Request.Cookies["sessionId"];
 
-                        var result2 = assistant.Message(
-                assistantId: "74e78bca-b878-4493-92ad-f31e048b92cd",
-                sessionId: sessionId,
-                input: new MessageInput()
-                {
-                    Text = userQuery
+                var result2 = assistant.Message(
+        assistantId: "74e78bca-b878-4493-92ad-f31e048b92cd",
+        sessionId: sessionId,
+        input: new MessageInput()
+        {
+            Text = userQuery
 
-                }
-    );
+        }
+);
 
                 Console.WriteLine(result2.Response);
                 Dictionary<string, string> dict = new Dictionary<string, string>();
                 JObject response = JObject.Parse(result2.Response);
+                Console.WriteLine(result2.Response);
 
                 if (response != null)
                 {
@@ -124,14 +129,14 @@ namespace SHU_Assistant.Controllers
                     {
                         Console.WriteLine(e);
                     }
-                    if (titleOfText != null && titleOfText.Substring(0, 1) == "[")
+                    if (titleOfText != null)
 
                     {
                         int index = titleOfText.IndexOf(':');
 
                         titleOfText = index >= 0 ? titleOfText.Substring(0, index) : titleOfText;
                     }
-                    if (mainTitle != null && mainTitle.Substring(0, 1) == "[")
+                    if (mainTitle != null)
 
                     {
                         int index = mainTitle.IndexOf(':');
@@ -141,13 +146,13 @@ namespace SHU_Assistant.Controllers
 
                     try
                     {
-                        
+
                         for (int i = 0; i < response["output"]["generic"].Count(); i++)
                         {
                             question = response?["output"]?["generic"]?[i]?["text"]?.ToString();
                             if (question != null && question.Contains(","))
                             {
-                               
+
                                 if (question != null && question.Substring(0, 1) == "[")
 
                                 {
@@ -162,10 +167,10 @@ namespace SHU_Assistant.Controllers
                                 ViewBag.Question = question;
                             }
 
-                            }
+                        }
 
 
-                            mainTitle = response?["output"]?["generic"]?[0]?["title"]?.ToString();
+                        mainTitle = response?["output"]?["generic"]?[0]?["title"]?.ToString();
                     }
                     catch (Exception e)
                     {
@@ -234,17 +239,73 @@ namespace SHU_Assistant.Controllers
                         }
                     }
 
-                  
+
                     ViewBag.MainTitle = mainTitle;
                     ViewBag.MainTextTitle = titleOfText;
                     Console.WriteLine(mainTitle);
                     Console.WriteLine(titleOfText);
+                    string topic = "";
+                    int topicIntend = 0;
+
+
+                    if (titleOfText != null && titleOfText.ToUpper().Contains("AI"))
+                    {
+                        topic = "AI";
+                        topicIntendAi++;
+                        topicIntend = topicIntendAi;
+                    }
+                    if (titleOfText != null && titleOfText.ToUpper().Contains("CLOUD"))
+                    {
+                        topic = "CLOUD";
+                        topicIntendCloud++;
+                        topicIntend = topicIntendCloud;
+
+                    }
+                    if (titleOfText != null && titleOfText.ToUpper().Contains("CYBER SECURITY"))
+                    {
+                        topic = "CYBER SECURITY";
+                        topicIntendCyberSec++;
+                        topicIntend = topicIntendCyberSec;
+
+                    }
+                    if (titleOfText != null && titleOfText.ToUpper().Contains("DESIGN THINKING"))
+                    {
+                        topic = "DESIGN THINKING";
+                        topicIntendDesingThink++;
+                        topicIntend = topicIntendDesingThink;
+
+                    }
 
                     linkSeprater(response);
                     ViewBag.TitlesLinks = dict;
                     ViewBag.Labels = lables;
                     ViewBag.Anwser = anwser;
-                    
+                    ViewBag.Topic = topic;
+
+                    //get the file path
+                    //D:\SHU\Y2 S1\Professenal Software Project\SHU-Assistant\SHU-Assistant\RecomandationDB.csv
+                    string filePath = Path.GetFullPath("RecomandationDB.csv");
+                    Console.WriteLine(filePath);
+
+
+                    //to write on GuestDB
+                    using (System.IO.StreamWriter writer = new System.IO.StreamWriter(filePath, true))
+                    {
+                        //write each guest in the new bookings oredered list
+                        if (topic.Length > 1)
+                        {
+                            writer.WriteLine(sessionId + "," + topic + "," + topicIntend);
+                            writer.Close();
+                        }
+                        else
+                        {
+                            writer.WriteLine(sessionId + "," + userQuery + "," + topicIntend);
+                            writer.Close();
+                        }
+                    }
+
+
+
                 }
             }
 

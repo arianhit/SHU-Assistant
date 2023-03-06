@@ -40,7 +40,32 @@
     <h1 class="text-center font-bold text-xl text-white">
         @ViewBag.Anwser
     </h1>
+    @switch(ViewBag.Topic)
+    {
+        @case "AI":
+            <div style="text-align: center;">
+                <img src="~/public/AI_1.png" alt="Ai Logo" style="display: block; margin: 0 auto;" width="300" height="200">
+            </div>
+            
+            break;
+        @case "CLOUD":
+           <div style="text-align: center;">
+                <img src="~/public/Cloud.png" alt="Cloud Logo" style="display: block; margin: 0 auto;" width="300" height="200">
+            </div>
+            break;
+        @case "CYBER SECURITY":
+            <div style="text-align: center;">
+                <img src="~/public/Cyber sec.png" alt="Cyber sec Logo" style="display: block; margin: 0 auto;" width="300" height="200">
+            </div>
+            break;
+        @case "DESIGN THINKING":
+            <div style="text-align: center;"> 
+                        <img src="~/public/Design Thinking.png" alt="Design Thinking Logo" style="display: block; margin: 0 auto;" width="300" height="200">
+            </div>
+            break;
+       
 
+    }
     
     
 
