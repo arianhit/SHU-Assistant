@@ -14,6 +14,10 @@ using Newtonsoft.Json;
 using Microsoft.AspNetCore.Http;
 using IBM.Cloud.SDK.Core.Authentication;
 using System.Reflection;
+using System.Runtime.ConstrainedExecution;
+using System.Runtime.InteropServices;
+using System.IO;
+using FuzzySharp;
 //challanges 
 //Every time user chat with bot new session will creat
 //The options that bot give needed to be button on the page so user should be able to click on it and send the label of the button to bot 
@@ -31,6 +35,10 @@ namespace SHU_Assistant.Controllers
         public int topicIntendCloud = 0;
         public int topicIntendCyberSec = 0;
         public int topicIntendDesingThink = 0;
+        public string[] intents = new string[]{"AI beginners", "AI Intermediate", "Cloud beginners", "Cloud intermediate", "Cyber Security beginners",
+        "Cyber Security intermediate", "Design Thinking beginners","Design Thinking intermediate", "AI credentials", "Cloud credentials",
+        "Cyber Security credentials", "Design Thinking credentials", "AI Careers", "Cloud Careers", "Cyber Security Careers"};
+        public string filePath = Path.GetFullPath("RecomandationDB.csv");
 
         public HomeController(ILogger<HomeController> logger)
         {
@@ -48,6 +56,7 @@ namespace SHU_Assistant.Controllers
 
             Console.WriteLine(sessionId);
 
+
             // Pass the session ID to the view
             try
             {
@@ -64,6 +73,17 @@ namespace SHU_Assistant.Controllers
                 sessionId = result1.Result.SessionId;
                 Console.WriteLine(sessionId);
                 HttpContext.Response.Cookies.Append("sessionId", sessionId);
+                foreach (string str in intents)
+                {
+
+                    using (System.IO.StreamWriter writer = new System.IO.StreamWriter(filePath, true))
+                    {
+                        //write each guest in the new bookings oredered list
+
+                        writer.WriteLine(sessionId + "," + str + "," + 0);
+                        writer.Close();
+                    }
+                }
 
 
 
@@ -153,13 +173,17 @@ namespace SHU_Assistant.Controllers
                             if (question != null && question.Contains(","))
                             {
 
-                                if (question != null && question.Substring(0, 1) == "[")
+                                if (question != null && question.Substring(0, 1) != "[")
 
                                 {
                                     int index = question.IndexOf(':');
 
                                     question = index >= 0 ? question.Substring(0, index) : question;
                                 }
+                                ViewBag.Question = question;
+                            }
+                            if (question != null && question.Contains("Here some topics you might also be interested in:"))
+                            {
                                 ViewBag.Question = question;
                             }
                             if (question != null && question.Contains("?"))
@@ -246,7 +270,21 @@ namespace SHU_Assistant.Controllers
                     Console.WriteLine(titleOfText);
                     string topic = "";
                     int topicIntend = 0;
-
+                    // ,AI beginners,0
+                    //,AI Intermediate,0
+                    //,Cloud beginners,0
+                    //,Cloud intermediate,0
+                    //,Cyber Security beginners,0
+                    //,Cyber Security intermediate,0
+                    //,Design Thinking beginners,0
+                    //,Design Thinking intermediate,0
+                    //,AI credentials,0
+                    //,Cloud credentials,0
+                    //,Cyber Security credentials,0
+                    //,Design Thinking credentials,0
+                    //,AI Careers,0
+                    //,Cloud Careers,0
+                    //,Cyber Security Careers,0
 
                     if (titleOfText != null && titleOfText.ToUpper().Contains("AI"))
                     {
@@ -275,34 +313,75 @@ namespace SHU_Assistant.Controllers
                         topicIntend = topicIntendDesingThink;
 
                     }
+                    List<string> lines = new List<string>(); // to store all the lines
+                    List<Recomendation> recomendations = new List<Recomendation>();
+                    using (StreamReader reader = new StreamReader(filePath))
+                    {
+                        string line;
+                        while ((line = reader.ReadLine()) != null)
+                        {
+                            lines.Add(line); // add each line to the list
+                        }
+                        reader.Close();
+                    }
 
+                    string[] linesArray = lines.ToArray();
+
+                    foreach (string line in linesArray)
+                    {
+                        var values = line.Split(",");
+                        if (values.Length >= 3 && values != null)
+                        {
+                            recomendations.Add(new Recomendation(values[0], values[1], Convert.ToInt32(values[2])));
+                        }
+                    }
+
+                    Recomendation[] recomendationsArray = recomendations.ToArray();
+                    int fuz = 0;
+                    foreach (Recomendation recomendation in recomendationsArray)
+                    {
+                        if (recomendation.GetSessionId() == sessionId)
+                        {
+                            string learningTopic = recomendation.GetLearningTopic();
+                            if (mainTitle != null)
+                            {
+                                fuz = Fuzz.TokenSortRatio(mainTitle, learningTopic);
+                            }
+                            if (titleOfText != null)
+                            {
+                                fuz = Fuzz.TokenSortRatio(titleOfText, learningTopic);
+                            }
+                            if (fuz > 50)
+                            {
+                                recomendation.SetTarget(1);
+                            }
+                        }
+                    }
+
+                    using (StreamWriter writer = new StreamWriter(filePath))
+                    {
+                        writer.Write(string.Empty);
+                        writer.Close();
+                    }
                     linkSeprater(response);
                     ViewBag.TitlesLinks = dict;
                     ViewBag.Labels = lables;
                     ViewBag.Anwser = anwser;
                     ViewBag.Topic = topic;
-
-                    //get the file path
-                    //D:\SHU\Y2 S1\Professenal Software Project\SHU-Assistant\SHU-Assistant\RecomandationDB.csv
-                    string filePath = Path.GetFullPath("RecomandationDB.csv");
-                    Console.WriteLine(filePath);
-
-
-                    //to write on GuestDB
-                    using (System.IO.StreamWriter writer = new System.IO.StreamWriter(filePath, true))
+                    foreach (Recomendation re in recomendationsArray)
                     {
-                        //write each guest in the new bookings oredered list
-                        if (topic.Length > 1)
+
+                        using (System.IO.StreamWriter writer = new System.IO.StreamWriter(filePath, true))
                         {
-                            writer.WriteLine(sessionId + "," + topic + "," + topicIntend);
-                            writer.Close();
-                        }
-                        else
-                        {
-                            writer.WriteLine(sessionId + "," + userQuery + "," + topicIntend);
+                            //write each guest in the new bookings oredered list
+
+                            writer.WriteLine(re.GetSessionId() + "," + re.GetLearningTopic() + "," + re.GetTarget());
                             writer.Close();
                         }
                     }
+                    //get the file path
+                    //D:\SHU\Y2 S1\Professenal Software Project\SHU-Assistant\SHU-Assistant\RecomandationDB.csv
+
 
 
 
@@ -317,10 +396,10 @@ namespace SHU_Assistant.Controllers
                 Console.WriteLine("Error: " + e.Message);
 
             }
-            catch (Exception e)
-            {
-                Console.WriteLine("Error: " + e.Message);
-            }
+            //catch (Exception e)
+            //{
+            //    Console.WriteLine("Error: " + e.Message);
+            //}
             return View();
         }
 
@@ -332,5 +411,40 @@ namespace SHU_Assistant.Controllers
         }
 
 
+    }
+
+    public class Recomendation
+    {
+        private string sessionId;
+        private string learningTopic;
+        private int target;
+
+
+
+        public Recomendation(string sessionId, string learningTopic, int target)
+        {
+            this.sessionId = sessionId;
+            this.learningTopic = learningTopic;
+            this.target = target;
+        }
+
+        public string GetSessionId()
+        {
+            return sessionId;
+        }
+        public string GetLearningTopic()
+        {
+            return learningTopic;
+        }
+
+        public int GetTarget()
+        {
+            return target;
+        }
+
+        public void SetTarget(int target)
+        {
+            this.target = target;
+        }
     }
 }
