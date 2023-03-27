@@ -17,6 +17,7 @@ using System.Reflection;
 using System.Runtime.ConstrainedExecution;
 using System.Runtime.InteropServices;
 using System.IO;
+using System.Web;
 using FuzzySharp;
 //challanges 
 //Every time user chat with bot new session will creat
@@ -28,6 +29,7 @@ namespace SHU_Assistant.Controllers
 {
     public class HomeController : Controller
     {
+
         private readonly ILogger<HomeController> _logger;
         public AssistantService assistant;
         public string sessionId;
@@ -73,21 +75,43 @@ namespace SHU_Assistant.Controllers
                 sessionId = result1.Result.SessionId;
                 Console.WriteLine(sessionId);
                 HttpContext.Response.Cookies.Append("sessionId", sessionId);
-                foreach (string str in intents)
+
+                List<string> lines = new List<string>();
+                using (StreamReader reader = new StreamReader(filePath))
                 {
-
-                    using (System.IO.StreamWriter writer = new System.IO.StreamWriter(filePath, true))
+                    string line;
+                    while ((line = reader.ReadLine()) != null)
                     {
-                        //write each guest in the new bookings oredered list
+                        lines.Add(line); // add each line to the list
+                    }
+                    reader.Close();
+                }
+                string[] csvArrays = lines.ToArray();
 
-                        writer.WriteLine(sessionId + "," + str + "," + 0);
-                        writer.Close();
+
+                List<Recomendation> recomendations = new List<Recomendation>();
+
+                foreach (string line in csvArrays)
+                {
+                    var values = line.Split(",");
+                    if (values.Length >= 2 && values != null)
+                    {
+                        recomendations.Add(new Recomendation(values[0], Convert.ToInt32(values[1])));
                     }
                 }
 
+                List<string> recTopics = new List<string>();
+                IEnumerable<Recomendation> topThreeRecommendations = recomendations.OrderByDescending(r => r.GetTarget()).Take(3);
 
+                foreach (Recomendation rec in topThreeRecommendations)
+                {
+                    recTopics.Add(rec.GetLearningTopic());
+                }
 
-
+                if (recTopics != null)
+                {
+                    ViewBag.Recomendations = recTopics;
+                }
             }
             catch (Exception e)
             {
@@ -182,10 +206,7 @@ namespace SHU_Assistant.Controllers
                                 }
                                 ViewBag.Question = question;
                             }
-                            if (question != null && question.Contains("Here some topics you might also be interested in:"))
-                            {
-                                ViewBag.Question = question;
-                            }
+
                             if (question != null && question.Contains("?"))
                             {
                                 ViewBag.Question = question;
@@ -314,7 +335,7 @@ namespace SHU_Assistant.Controllers
 
                     }
                     List<string> lines = new List<string>(); // to store all the lines
-                    List<Recomendation> recomendations = new List<Recomendation>();
+                    List<Recomendation> oldRecomendations = new List<Recomendation>();
                     using (StreamReader reader = new StreamReader(filePath))
                     {
                         string line;
@@ -330,31 +351,28 @@ namespace SHU_Assistant.Controllers
                     foreach (string line in linesArray)
                     {
                         var values = line.Split(",");
-                        if (values.Length >= 3 && values != null)
+                        if (values.Length >= 2 && values != null)
                         {
-                            recomendations.Add(new Recomendation(values[0], values[1], Convert.ToInt32(values[2])));
+                            oldRecomendations.Add(new Recomendation(values[0], Convert.ToInt32(values[1])));
                         }
                     }
 
-                    Recomendation[] recomendationsArray = recomendations.ToArray();
+                    Recomendation[] recomendationsArray = oldRecomendations.ToArray();
                     int fuz = 0;
                     foreach (Recomendation recomendation in recomendationsArray)
                     {
-                        if (recomendation.GetSessionId() == sessionId)
+                        string learningTopic = recomendation.GetLearningTopic();
+                        if (mainTitle != null)
                         {
-                            string learningTopic = recomendation.GetLearningTopic();
-                            if (mainTitle != null)
-                            {
-                                fuz = Fuzz.TokenSortRatio(mainTitle, learningTopic);
-                            }
-                            if (titleOfText != null)
-                            {
-                                fuz = Fuzz.TokenSortRatio(titleOfText, learningTopic);
-                            }
-                            if (fuz > 50)
-                            {
-                                recomendation.SetTarget(1);
-                            }
+                            fuz = Fuzz.TokenSortRatio(mainTitle, learningTopic);
+                        }
+                        if (titleOfText != null)
+                        {
+                            fuz = Fuzz.TokenSortRatio(titleOfText, learningTopic);
+                        }
+                        if (fuz > 50)
+                        {
+                            recomendation.SetTarget(recomendation.GetTarget() + 1);
                         }
                     }
 
@@ -375,16 +393,50 @@ namespace SHU_Assistant.Controllers
                         {
                             //write each guest in the new bookings oredered list
 
-                            writer.WriteLine(re.GetSessionId() + "," + re.GetLearningTopic() + "," + re.GetTarget());
+                            writer.WriteLine(re.GetLearningTopic() + "," + re.GetTarget());
                             writer.Close();
                         }
                     }
+
                     //get the file path
                     //D:\SHU\Y2 S1\Professenal Software Project\SHU-Assistant\SHU-Assistant\RecomandationDB.csv
 
+                    List<string> newLines = new List<string>();
+                    using (StreamReader reader = new StreamReader(filePath))
+                    {
+                        string line;
+                        while ((line = reader.ReadLine()) != null)
+                        {
+                            newLines.Add(line); // add each line to the list
+                        }
+                        reader.Close();
+                    }
+                    string[] csvArrays = newLines.ToArray();
 
 
+                    List<Recomendation> recomendations = new List<Recomendation>();
 
+                    foreach (string line in csvArrays)
+                    {
+                        var values = line.Split(",");
+                        if (values.Length >= 2 && values != null)
+                        {
+                            recomendations.Add(new Recomendation(values[0], Convert.ToInt32(values[1])));
+                        }
+                    }
+
+                    List<string> recTopics = new List<string>();
+                    IEnumerable<Recomendation> topThreeRecommendations = recomendations.OrderByDescending(r => r.GetTarget()).Take(3);
+
+                    foreach (Recomendation rec in topThreeRecommendations)
+                    {
+                        recTopics.Add(rec.GetLearningTopic());
+                    }
+
+                    if (recTopics != null)
+                    {
+                        ViewBag.Recomendations = recTopics;
+                    }
                 }
             }
 
@@ -402,7 +454,10 @@ namespace SHU_Assistant.Controllers
             //}
             return View();
         }
-
+        public ActionResult Profile()
+        {
+            return View();
+        }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
@@ -410,27 +465,22 @@ namespace SHU_Assistant.Controllers
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
+       
+
 
     }
 
     public class Recomendation
     {
-        private string sessionId;
-        private string learningTopic;
-        private int target;
+        protected string learningTopic;
+        protected int target;
 
 
 
-        public Recomendation(string sessionId, string learningTopic, int target)
+        public Recomendation(string learningTopic, int target)
         {
-            this.sessionId = sessionId;
             this.learningTopic = learningTopic;
             this.target = target;
-        }
-
-        public string GetSessionId()
-        {
-            return sessionId;
         }
         public string GetLearningTopic()
         {
