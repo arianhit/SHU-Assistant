@@ -1,43 +1,60 @@
-﻿<!---------------------   Nav  starts---------------------->
-
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+<!-- Chat messages and recommendations -->
 <div class="w-full h-3/4 grid grid-cols-4 grid-rows-1">
+    <!-- Chat message display-->
     <div class="w-full h-full overflow-auto p-4 col-span-3 flex flex-col space-y-4 items-center border-r-2 border-secondary">
-
-
-        <!-- Dynamic MainTitle and MainTextTitle -->
+       
         @if (@ViewBag.MainTitle == null && @ViewBag.MainTextTitle == null && @ViewBag.Question == null)
         {
-            <h1 class="text-4xl font-bold leading-tight text-white">
+            <h1 class="text-4xl font-bold leading-tight">
                 Hi!,Type something in the search bar so I can help you!
             </h1>
         }
         <h1 class="text-4xl font-bold leading-tight">
             @if (ViewBag.MainTitle != @ViewBag.MainTextTitle)
             {
-                @ViewBag.MainTitle
+                <p>MainTilte</p>
 
             }
         </h1>
         @if (@ViewBag.MainTextTitle != "You can sign-in to your IBM account by clicking : [here](https://login.ibm.com/)")
         {
-            <h1 class="text-4xl font-bold leading-tight text-white">
-                @ViewBag.MainTextTitle
+            <h1 class="text-4xl font-bold leading-tight">
+                <p>MainTilte Text</p>
             </h1>
         }
         @if (@ViewBag.MainTextTitle == "You can sign-in to your IBM account by clicking : [here](https://login.ibm.com/)")
         {
             <h1 class="text-4xl font-bold leading-tight">You can sign-in to your IBM account by clicking</h1>
             <a href="https://login.ibm.com/" target="_blank"
-           class="btn btn-outline text-white">
+           class="btn btn-outline">
                 <span class="w-full">Login</span>
+                <svg aria-hidden="true"
+                 class="w-6 h-6 ml-3"
+                 fill="currentColor"
+                 viewBox="0 0 20 20"
+                 xmlns="http://www.w3.org/2000/svg">
+                    <path fill-rule="evenodd"
+                      d="M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-2.293-2.293a1 1 0 010-1.414z"
+                      clip-rule="evenodd"></path>
+                </svg>
             </a>
         }
         <h1 class="text-4xl font-bold leading-tight">
-            @if (@ViewBag.Anwser != @ViewBag.MainTextTitle && @ViewBag.Anwser != @ViewBag.MainTitle)
-            {
-                @ViewBag.Anwser
-            }
+        @if (@ViewBag.Anwser != @ViewBag.MainTextTitle && @ViewBag.Anwser != @ViewBag.MainTitle)
+        {
+            <p>Anwser</p>
+        }
         </h1>
+
+        <img src="~/public/AI_1.png" class="object-cover h-48 w-96 rounded-xl shadow-md"
+             src="https://picsum.photos/400/400"
+             alt=""
+             loading="lazy">
         <!-- For a image -->
         @switch (ViewBag.Topic)
         {
@@ -70,35 +87,49 @@
              loading="lazy" />
 
                 break;
+
+
         }
         @if (@ViewBag.TitlesLinks != null)
         {
 
             @foreach (var entry in @ViewBag.TitlesLinks)
             {
-                var imagePath = "/public/logos/" + @entry.Key + ".png";
+                
 
-                <a href="@entry.Value" target="_blank" class="btn btn-outline bt-lg gap-2 text-white">
-                    <span>@entry.Key</span>
-                    @if (System.IO.File.Exists("D:/SHU/Y2 S1/Professenal Software Project/SHU-Assistant/SHU-Assistant/wwwroot" + imagePath))
-                    {
-                        <img src="@imagePath" alt="icon" class="w-7 h-full object-contain rounded-full">
-                    }
+                <a href="@entry.Value" target="_blank" class="btn btn-outline">
+                    <span class="text-4xl font-bold leading-tight">Ai Begginiers</span>
+                   
+                        <img src="/public/logos/AI and Machine Learning Full Course (10 hours).png" alt="icon" class="w-10 h-10 object-contain rounded-full mx-auto mt-3">
+                    
+                    <svg aria-hidden="true" class="w-6 h-6 ml-3" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd" d="M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+                    </svg>
                 </a>
             }
 
         }
-        <h1 class="text-4xl font-bold leading-tight text-white">
-            @ViewBag.Question
+        <h1 class="text-4xl font-bold leading-tight">
+            <p>Question</p>
         </h1>
         @if (@ViewBag.Labels != null)
         {
             @foreach (var label in @ViewBag.Labels)
             {
                 <button id="myButton" type="button"
-                class="btn bg-{#ffffff} btn-outline borde-white text-white"
-                onclick="fillTextBox('@label')">
-                    <span class="w-full">@label</span>
+                class="inline-flex items-center justify-center p-5 text-base font-medium text-gray-500 rounded-lg bg-gray-50 hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700 dark:hover:text-white"
+                onclick="fillTextBox('Yes')">
+                    <span class="w-full">Yes</span>
+                    <svg aria-hidden="true"
+                 class="w-6 h-6 ml-3"
+                 fill="currentColor"
+                 viewBox="0 0 20 20"
+                 xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd"
+                      d="M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-2.293-2.293a1 1 0 010-1.414z"
+                      clip-rule="evenodd"></path>
+                    </svg>
+
                 </button>
                 <script>
                     function fillTextBox(label) {
@@ -112,29 +143,26 @@
     </div>
 
     <!-- Reccomendations display-->
-
-
     <div class="p-2">
-        <div class="flex items-center justify-center">
-
-            <a class="avatar flex flex-col gap-2 item-center justify-center text-center text-white" href="@Url.Action("Profile", "Home")">
-                <div class="w-24 rounded-full">
-                    <img src="https://loremflickr.com/320/240/man" />
-                </div>
-                <p>Profile</p>
-            </a>
-        </div>
-        <h2 class="text-2xl font-bold text-center mb-4 p-4 text-white">Reccomednations:</h2>
+        <h2 class="text-2xl font-bold text-center mb-4 p-4">Reccomednations:</h2>
         <div class="flex items-center justify-center flex-col gap-5">
             @if (@ViewBag.Recomendations != null)
             {
                 @foreach (var rec in @ViewBag.Recomendations)
                 {
                     <button id="myButton" type="button"
-                    class="btn bg-{#ffffff} btn-outline borde-white text-white"
-                    onclick="fillTextBox('@rec')">
-                        <span class="w-full">@rec</span>
-
+                    class="inline-flex items-center justify-center p-5 text-base font-medium text-gray-500 rounded-lg bg-gray-50 hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700 dark:hover:text-white"
+                    onclick="fillTextBox('Test')">
+                        <span class="w-full">Ai Beginners test</span>
+                        <svg aria-hidden="true"
+                     class="w-6 h-6 ml-3"
+                     fill="currentColor"
+                     viewBox="0 0 20 20"
+                     xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd"
+                          d="M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-2.293-2.293a1 1 0 010-1.414z"
+                          clip-rule="evenodd"></path>
+                        </svg>
 
                     </button>
                     <script>
@@ -152,20 +180,17 @@
 
 <!-- Form input -->
 
-
 <div class="w-full h-1/4 flex items-center justify-center border-t-2 border-secondary">
-    <form class="max-w-lg w-full" method="post">
+    <form class="max-w-lg w-full">
         <div class="form-control w-full">
             <div class="input-group">
                 <input type="text"
                        id="question"
                        name="userQuery"
-                       placeholder="Chat…"
+                       placeholder="Search…"
                        class="input input-bordered w-full"
                        required />
-                <button type="submit"
-                        value="Submit"
-                        class="btn btn-square">
+                <button class="btn btn-square">
                     <svg xmlns="http://www.w3.org/2000/svg"
                          class="h-6 w-6"
                          fill="none"
@@ -181,17 +206,3 @@
         </div>
     </form>
 </div>
-
-<script>
-    window.watsonAssistantChatOptions = {
-        integrationID: "9e1d9225-e6df-4f38-a99f-351d5418a8bd", // The ID of this integration.
-        region: "eu-gb", // The region your integration is hosted in.
-        serviceInstanceID: "9105472d-0990-4acc-a349-661d4607d608", // The ID of your service instance.
-        onLoad: function (instance) { instance.render(); }
-    };
-    setTimeout(function () {
-        const t = document.createElement('script');
-        t.src = "https://web-chat.global.assistant.watson.appdomain.cloud/versions/" + (window.watsonAssistantChatOptions.clientVersion || 'latest') + "/WatsonAssistantChatEntry.js";
-        document.head.appendChild(t);
-    });
-</script>
