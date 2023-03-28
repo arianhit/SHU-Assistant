@@ -19,6 +19,7 @@ using System.Runtime.InteropServices;
 using System.IO;
 using System.Web;
 using FuzzySharp;
+using static System.Net.WebRequestMethods;
 //challanges 
 //Every time user chat with bot new session will creat
 //The options that bot give needed to be button on the page so user should be able to click on it and send the label of the button to bot 
@@ -462,6 +463,27 @@ namespace SHU_Assistant.Controllers
         }
         public ActionResult Profile()
         {
+            List<Item> items = new List<Item>();
+
+            items.Add(new Item("https://w7.pngwing.com/pngs/565/373/png-transparent-terraria-team-fortress-2-video-game-weapon-sword-swords-purple-game-angle-thumbnail.png", "Sward1", "Sward1", 500));
+            items.Add(new Item("https://w7.pngwing.com/pngs/546/187/png-transparent-terraria-minecraft-true-night-video-game-wikia-minecraft-thumbnail.png", "Sward12", "Sward2", 999));
+            items.Add(new Item("https://preview.redd.it/lzalazhjf7i31.jpg?auto=webp&s=5fd106a8bae97b64873ce905e604c13cff363574", "Sward3", "Sward3", 900));
+            items.Add(new Item("https://w7.pngwing.com/pngs/860/89/png-transparent-minecraft-pocket-edition-terraria-sword-mod-minecraft-purple-angle-video-game.png", "Sward4", "Sward4", 50));
+            items.Add(new Item("https://www.nicepng.com/png/detail/220-2202101_terraria-custom-pixel-art-the-lords-sword-minecraft.png", "Sward5", "Sward5", 10));
+            items.Add(new Item("https://www.pngitem.com/pimgs/m/149-1493951_ninja-star-of-terraria-swords-aria-guidelines-2016.png", "Sward6", "Sward6", 200));
+            items.Add(new Item("https://www.kindpng.com/picc/m/87-876941_clip-art-diamond-terraria-fire-sword-pixel-art.png", "Sward15", "Sward51", 5));
+            items.Add(new Item("https://lh3.googleusercontent.com/ys4nE2iBXT01dLJ3Blgu3dPRKhtXJWZCe3JUoL2PWbatnsdMyduXvlSr6TdECUm6QZQINTGW_t7C-DZNvMkK=s400", "Armor1", "Armor1", 200));
+            items.Add(new Item("https://cdna.artstation.com/p/assets/images/images/051/296/252/large/meridianriver-azer-armor-item.jpg?1656948913", "Sward12", "Sward2", 800));
+            items.Add(new Item("https://toppng.com/uploads/preview/armor-minecraft-google-pinterest-minecraft-diamond-armor-11563000236eg5w4rh1n5.png", "Armor2", "Armor2", 500));
+            items.Add(new Item("https://lh3.googleusercontent.com/2nYsiYgrXrcZdKBZBfzRIqf8OJKwRfp_KS3wg8AUF_wNz4g3vKzJlNksCe7tHs9RJkrnXQvrWIiOpMwDYi6r", "Armor3", "Armor3", 50));
+            items.Add(new Item("https://cdn.modrinth.com/data/kvPlmCLX/icon.png", "Armor4", "Armor4", 10));
+            items.Add(new Item("https://w7.pngwing.com/pngs/45/40/png-transparent-minecraft-pocket-edition-breastplate-armour-diamond-minecraft-chest-blue-angle-rectangle-thumbnail.png", "Armor6", "Armor6", 999));
+            items.Add(new Item("https://www.pngitem.com/pimgs/m/645-6456391_minecraft-armor-png-transparent-png.png", "Armor6", "Sward6", 15));
+
+            ViewBag.Items = items;
+
+
+
             return View();
         }
         public ActionResult Test()
@@ -479,7 +501,39 @@ namespace SHU_Assistant.Controllers
 
 
     }
+    public class Item
+    {
+        protected string imagePathOfItem;
+        protected string imagenameOfItem;
+        protected string itemName;
+        protected float price;
 
+
+        public Item(string imagePathOfItem, string imagenameOfItem, string itemName,float price)
+        {
+            this.imagePathOfItem = imagePathOfItem;
+            this.imagenameOfItem = imagenameOfItem;
+            this.itemName = itemName;
+            this.price = price;
+        }
+
+        public string GetImagePath()
+        {
+            return this.imagePathOfItem;
+        }
+        public string GetImageName()
+        {
+            return imagenameOfItem;
+        }
+        public string GetItemName()
+        {
+            return itemName;
+        }
+        public float GetPrice()
+        {
+            return price;
+        }
+    }
     public class Recomendation
     {
         protected string learningTopic;

@@ -1,93 +1,116 @@
 ﻿<div class="w-full h-full flex ">
-<!-- Left Profile -->
-<div class="w-1/3 h-full py-10 px-4 flex flex-col items-center gap-5">
-    <!-- Avatar -->
-    <div class="avatar online">
-        <div class="w-24 rounded-full ring ring-secondary ring-offset-base-100 ring-offset-2">
-            <img src="https://picsum.photos/200" />
-        </div>
-    </div>
-
-    <p class="text-sm text-center font-bold">Profile name: Arain dehegni</p>
-    <p class="text-sm text-center font-bold">Points: 2300</p>
-    <p class="text-sm text-center font-bold">Badges:</p>
-    <div>
-        <span class="badge">AI</span>
-        <span class="badge badge-primary">Cyber</span>
-        <span class="badge badge-primary">Design</span>
-        <span class="badge badge-secondary">Code</span>
-    </div>
-</div>
-
-<!-- Recommended -->
-
-<div class="w-1/3 h-[55rem] flex flex-col items-center py-10 gap-5 px-6 overflow-auto">
-    <h1 class="font-bold text-xl text-center">Recommendations:</h1>
-
-    <!-- Card -->
-
-    <a class="card w-full bg-base-100 shadow-xl" href="/">
-        <figure class="h-[15rem]">
-            <img src="https://picsum.photos/300"
-                 class="w-full h-full object-cover" />
-        </figure>
-        <div class="card-body">
-            <h2 class="card-title">AI Intermediate</h2>
-            <p>
-                Learn more advanced topics and ideas around AI and how its being
-                used in the industry
-            </p>
-            <div class="card-actions justify-end">
-                <div class="badge badge-outline">AI-2</div>
-                <div class="badge badge-outline">Industry</div>
+    <!-- Left Profile -->
+    <div class="w-1/3 h-full py-10 px-4 flex flex-col items-center gap-5 border-r-2">
+        <!-- Avatar -->
+        <div class="avatar online">
+            <div class="w-24 rounded-full ring ring-secondary ring-offset-base-100 ring-offset-2">
+                <img src="https://picsum.photos/200" />
             </div>
         </div>
-    </a>
 
-    <a class="card w-full bg-base-100 shadow-xl" href="/">
-        <figure class="h-[15rem]">
-            <img src="https://picsum.photos/300"
-                 class="w-full h-full object-cover" />
-        </figure>
-        <div class="card-body">
-            <h2 class="card-title">Cyber Security Risks</h2>
-            <p>
-                Learn what hackers are exploiting to gain access to large scale
-                systems and how to prevent them
-            </p>
-            <div class="card-actions justify-end">
-                <div class="badge badge-outline">Risks</div>
-                <div class="badge badge-outline">Cyber-2</div>
-            </div>
+        <p class="text-sm text-center font-bold">Profile name: Arain dehegni</p>
+        <p class="text-sm text-center font-bold">Points: 2300</p>
+        <p class="text-sm text-center font-bold">Badges:</p>
+        <div>
+            <span class="badge">AI</span>
+            <span class="badge badge-primary">Cyber</span>
+            <span class="badge badge-primary">Design</span>
+            <span class="badge badge-secondary">Code</span>
         </div>
-    </a>
-</div>
 
-<!-- Completed -->
+        <!-- Completed -->
+        <div class="w-full h-[30rem] overflow-auto flex flex-col gap-4 mt-4 relative">
+            <h1 class="font-bold text-xl text-center mb-4 sticky top-0 z-10">
+                Completed courses:
+            </h1>
 
-<div class="w-1/3 h-[55rem] flex flex-col items-center py-10 gap-5 px-6 overflow-auto">
-    <h1 class="font-bold text-xl text-center">Completed:</h1>
+            <div class="card w-full bg-base-100 shadow-xl">
+                <div class="card-body">
+                    <h2 class="card-title">AI Beginners</h2>
+                    <div class="card-actions justify-end">
+                        <div class="badge badge-outline">AI</div>
+                        <div class="badge badge-outline">AI-Beginners</div>
+                    </div>
+                </div>
+            </div>
 
-    <!-- Card -->
+            <div class="card w-full bg-base-100 shadow-xl">
+                <div class="card-body">
+                    <h2 class="card-title">AI Beginners</h2>
+                    <div class="card-actions justify-end">
+                        <div class="badge badge-outline">AI</div>
+                        <div class="badge badge-outline">AI-Beginners</div>
+                    </div>
+                </div>
+            </div>
 
-    <div class="card w-full bg-base-100 shadow-xl">
-        <div class="card-body">
-            <h2 class="card-title">AI Beginners</h2>
-            <div class="card-actions justify-end">
-                <div class="badge badge-outline">AI</div>
-                <div class="badge badge-outline">AI-Beginners</div>
+            <div class="card w-full bg-base-100 shadow-xl">
+                <div class="card-body">
+                    <h2 class="card-title">AI Beginners</h2>
+                    <div class="card-actions justify-end">
+                        <div class="badge badge-outline">AI</div>
+                        <div class="badge badge-outline">AI-Beginners</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card w-full bg-base-100 shadow-xl">
+                <div class="card-body">
+                    <h2 class="card-title">AI Beginners</h2>
+                    <div class="card-actions justify-end">
+                        <div class="badge badge-outline">AI</div>
+                        <div class="badge badge-outline">AI-Beginners</div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 
-    <div class="card w-full bg-base-100 shadow-xl">
-        <div class="card-body">
-            <h2 class="card-title">Design Thinking</h2>
-            <div class="card-actions justify-end">
-                <div class="badge badge-outline">Design</div>
-                <div class="badge badge-outline">Critical-Thinking</div>
+    <!-- Right -->
+
+    <div class="w-2/3 borde py-10 px-5">
+        <!-- Search -->
+        <div class="form-control w-full">
+            <div class="input-group w-full">
+                <input type="text"
+                       placeholder="Search…"
+                       class="input input-bordered w-full" />
+                <button class="btn btn-square">
+                    <svg xmlns="http://www.w3.org/2000/svg"
+                         class="h-6 w-6"
+                         fill="none"
+                         viewBox="0 0 24 24"
+                         stroke="currentColor">
+                        <path stroke-linecap="round"
+                              stroke-linejoin="round"
+                              stroke-width="2"
+                              d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                    </svg>
+                </button>
             </div>
         </div>
+
+        <!-- Item display -->
+
+        <div class="h-[35rem] mt-10 overflow-auto flex flex-wrap p-5 gap-10 justify-between">
+            <!-- Item -->
+            @foreach(var item in ViewBag.Items){
+                var imagePath = @item.GetImagePath();
+                <!-- Item -->
+                <a class="indicator w-20 h-20" href="/">
+                    <span class="indicator-item badge badge-secondary">@item.GetPrice()</span>
+                    <div class="avatar">
+                        <div class="w-20 h-20 rounded-xl">
+                            <img src=@imagePath
+                             alt="Tailwind-CSS-Avatar-component"
+                             class="objectfit-cover" />
+                        </div>
+                    </div>
+                </a>
+
+                <!-- Item ends -->
+            }
+          
+        </div>
     </div>
-</div>
 </div>

@@ -77,7 +77,7 @@
             {
                 var imagePath = "/public/logos/" + @entry.Key + ".png";
 
-                <a href="@entry.Value" target="_blank" class="btn btn-outline bt-lg gap-2 text-white">
+                <a href="@entry.Value" target="_blank" class="btn btn-outline gap-2 ">
                     <span>@entry.Key</span>
                     @if (System.IO.File.Exists(@"wwwroot/" + imagePath))
                     {
@@ -129,7 +129,7 @@
                 @foreach (var rec in @ViewBag.Recomendations)
                 {
                     <button id="myButton" type="button"
-                    class="btn bg-{#ffffff} btn-outline borde-white"
+                    class="btn  btn-outline"
                     onclick="fillTextBox('@rec')">
                         <span class="w-full">@rec</span>
 
