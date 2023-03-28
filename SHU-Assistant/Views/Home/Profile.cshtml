@@ -1,6 +1,93 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
-}
-<p>******************Profile***********</p>
+﻿<div class="w-full h-full flex text-white">
+<!-- Left Profile -->
+<div class="w-1/3 h-full py-10 px-4 flex flex-col items-center gap-5">
+    <!-- Avatar -->
+    <div class="avatar online">
+        <div class="w-24 rounded-full ring ring-secondary ring-offset-base-100 ring-offset-2">
+            <img src="https://picsum.photos/200" />
+        </div>
+    </div>
+
+    <p class="text-sm text-center font-bold">Profile name: Arain dehegni</p>
+    <p class="text-sm text-center font-bold">Points: 2300</p>
+    <p class="text-sm text-center font-bold">Badges:</p>
+    <div>
+        <span class="badge">AI</span>
+        <span class="badge badge-primary">Cyber</span>
+        <span class="badge badge-primary">Design</span>
+        <span class="badge badge-secondary">Code</span>
+    </div>
+</div>
+
+<!-- Recommended -->
+
+<div class="w-1/3 h-[55rem] flex flex-col items-center py-10 gap-5 px-6 overflow-auto">
+    <h1 class="font-bold text-xl text-center">Recommendations:</h1>
+
+    <!-- Card -->
+
+    <a class="card w-full bg-base-100 shadow-xl" href="/">
+        <figure class="h-[15rem]">
+            <img src="https://picsum.photos/300"
+                 class="w-full h-full object-cover" />
+        </figure>
+        <div class="card-body">
+            <h2 class="card-title">AI Intermediate</h2>
+            <p>
+                Learn more advanced topics and ideas around AI and how its being
+                used in the industry
+            </p>
+            <div class="card-actions justify-end">
+                <div class="badge badge-outline">AI-2</div>
+                <div class="badge badge-outline">Industry</div>
+            </div>
+        </div>
+    </a>
+
+    <a class="card w-full bg-base-100 shadow-xl" href="/">
+        <figure class="h-[15rem]">
+            <img src="https://picsum.photos/300"
+                 class="w-full h-full object-cover" />
+        </figure>
+        <div class="card-body">
+            <h2 class="card-title">Cyber Security Risks</h2>
+            <p>
+                Learn what hackers are exploiting to gain access to large scale
+                systems and how to prevent them
+            </p>
+            <div class="card-actions justify-end">
+                <div class="badge badge-outline">Risks</div>
+                <div class="badge badge-outline">Cyber-2</div>
+            </div>
+        </div>
+    </a>
+</div>
+
+<!-- Completed -->
+
+<div class="w-1/3 h-[55rem] flex flex-col items-center py-10 gap-5 px-6 overflow-auto">
+    <h1 class="font-bold text-xl text-center">Completed:</h1>
+
+    <!-- Card -->
+
+    <div class="card w-full bg-base-100 shadow-xl">
+        <div class="card-body">
+            <h2 class="card-title">AI Beginners</h2>
+            <div class="card-actions justify-end">
+                <div class="badge badge-outline">AI</div>
+                <div class="badge badge-outline">AI-Beginners</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card w-full bg-base-100 shadow-xl">
+        <div class="card-body">
+            <h2 class="card-title">Design Thinking</h2>
+            <div class="card-actions justify-end">
+                <div class="badge badge-outline">Design</div>
+                <div class="badge badge-outline">Critical-Thinking</div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
