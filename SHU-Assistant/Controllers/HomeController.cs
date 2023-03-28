@@ -245,10 +245,16 @@ namespace SHU_Assistant.Controllers
                                 {
                                     string link = Regex.Match(match.Value, linkPattern).Groups[2].Value;
                                     string title = match.Groups[1].Value;
-
-                                    dict.Add(title, link);
-                                    Console.WriteLine(title + "\n");
-                                    Console.WriteLine(link + "\n");
+                                    if (!dict.ContainsKey(title))
+                                    {
+                                        // Check if the value already exists in the dictionary
+                                        if (!dict.ContainsValue(link))
+                                        {
+                                            dict.Add(title, link);
+                                            Console.WriteLine(title + "\n");
+                                            Console.WriteLine(link + "\n");
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -469,7 +475,7 @@ namespace SHU_Assistant.Controllers
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
-       
+
 
 
     }
