@@ -7,7 +7,7 @@
         <!-- Dynamic MainTitle and MainTextTitle -->
         @if (@ViewBag.MainTitle == null && @ViewBag.MainTextTitle == null && @ViewBag.Question == null)
         {
-            <h1 class="text-4xl font-bold leading-tight text-white">
+            <h1 class="text-4xl font-bold leading-tight ">
                 Hi!,Type something in the search bar so I can help you!
             </h1>
         }
@@ -20,7 +20,7 @@
         </h1>
         @if (@ViewBag.MainTextTitle != "You can sign-in to your IBM account by clicking : [here](https://login.ibm.com/)")
         {
-            <h1 class="text-4xl font-bold leading-tight text-white">
+            <h1 class="text-4xl font-bold leading-tight">
                 @ViewBag.MainTextTitle
             </h1>
         }
@@ -86,7 +86,7 @@
                 </a>
             }
         }
-        <h1 class="text-4xl font-bold leading-tight text-white">
+        <h1 class="text-4xl font-bold leading-tight ">
             @ViewBag.Question
         </h1>
         @if (@ViewBag.Labels != null)
@@ -94,7 +94,7 @@
             @foreach (var label in @ViewBag.Labels)
             {
                 <button id="myButton" type="button"
-                class="btn bg-{#ffffff} btn-outline borde-white text-white"
+                class="btn bg-{#ffffff} btn-outline borde-white"
                 onclick="fillTextBox('@label')">
                     <span class="w-full">@label</span>
                 </button>
@@ -115,21 +115,21 @@
     <div class="p-2">
         <div class="flex items-center justify-center">
 
-            <a class="avatar flex flex-col gap-2 item-center justify-center text-center text-white" href="@Url.Action("Profile", "Home")">
+            <a class="avatar flex flex-col gap-2 item-center justify-center text-center" href="@Url.Action("Profile", "Home")">
                 <div class="w-24 rounded-full">
                     <img src="https://loremflickr.com/320/240/man" />
                 </div>
                 <p>Profile</p>
             </a>
         </div>
-        <h2 class="text-2xl font-bold text-center mb-4 p-4 text-white">Reccomendations:</h2>
+        <h2 class="text-2xl font-bold text-center mb-4 p-4 ">Reccomendations:</h2>
         <div class="flex items-center justify-center flex-col gap-5">
             @if (@ViewBag.Recomendations != null)
             {
                 @foreach (var rec in @ViewBag.Recomendations)
                 {
                     <button id="myButton" type="button"
-                    class="btn bg-{#ffffff} btn-outline borde-white text-white"
+                    class="btn bg-{#ffffff} btn-outline borde-white"
                     onclick="fillTextBox('@rec')">
                         <span class="w-full">@rec</span>
 
@@ -163,7 +163,7 @@
                        required />
                 <button type="submit"
                         value="Submit"
-                        class="btn btn-square btn-secondary">
+                        class="btn btn-square btn-secondary text-primary">
                     <svg xmlns="http://www.w3.org/2000/svg"
                          class="h-6 w-6"
                          fill="none"
