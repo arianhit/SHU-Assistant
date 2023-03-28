@@ -80,7 +80,7 @@
 
                 <a href="@entry.Value" target="_blank" class="btn btn-outline bt-lg gap-2 text-white">
                     <span>@entry.Key</span>
-                    @if (System.IO.File.Exists("D:/SHU/Y2 S1/Professenal Software Project/SHU-Assistant/SHU-Assistant/wwwroot" + imagePath))
+                    @if (System.IO.File.Exists(@"wwwroot/" + imagePath))
                     {
                         <img src="@imagePath" alt="icon" class="w-7 h-full object-contain rounded-full">
                     }
