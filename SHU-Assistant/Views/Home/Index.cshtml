@@ -12,7 +12,7 @@
             </h1>
         }
         <h1 class="text-4xl font-bold leading-tight">
-            @if (ViewBag.MainTitle != @ViewBag.MainTextTitle)
+            @if (ViewBag.MainTitle != @ViewBag.MainTextTitle && @ViewBag.Anwser != @ViewBag.MainTitle)
             {
                 @ViewBag.MainTitle
 
@@ -86,9 +86,12 @@
                 </a>
             }
         }
-        <h1 class="text-4xl font-bold leading-tight ">
-            @ViewBag.Question
-        </h1>
+        @if (ViewBag.MainTitle != @ViewBag.Question && ViewBag.Question != @ViewBag.MainTextTitle && @ViewBag.Anwser != ViewBag.Question)
+        {
+            <h1 class="text-4xl font-bold leading-tight ">
+                @ViewBag.Question
+            </h1>
+        }
         @if (@ViewBag.Labels != null)
         {
             @foreach (var label in @ViewBag.Labels)
@@ -117,7 +120,7 @@
 
             <a class="avatar flex flex-col gap-2 item-center justify-center text-center" href="@Url.Action("Profile", "Home")">
                 <div class="w-24 rounded-full">
-                    <img src="https://loremflickr.com/320/240/man" />
+                    <img src="https://media.licdn.com/dms/image/C4E03AQGunP7nzr_fQQ/profile-displayphoto-shrink_400_400/0/1667925596859?e=1685577600&v=beta&t=WZuhSpqxQ2fUNbd6bLSWzGmoRktczRZePC_rRmTDm7E" />
                 </div>
                 <p>Profile</p>
             </a>
@@ -179,17 +182,3 @@
         </div>
     </form>
 </div>
-
-<script>
-    window.watsonAssistantChatOptions = {
-        integrationID: "9e1d9225-e6df-4f38-a99f-351d5418a8bd", // The ID of this integration.
-        region: "eu-gb", // The region your integration is hosted in.
-        serviceInstanceID: "9105472d-0990-4acc-a349-661d4607d608", // The ID of your service instance.
-        onLoad: function (instance) { instance.render(); }
-    };
-    setTimeout(function () {
-        const t = document.createElement('script');
-        t.src = "https://web-chat.global.assistant.watson.appdomain.cloud/versions/" + (window.watsonAssistantChatOptions.clientVersion || 'latest') + "/WatsonAssistantChatEntry.js";
-        document.head.appendChild(t);
-    });
-</script>
